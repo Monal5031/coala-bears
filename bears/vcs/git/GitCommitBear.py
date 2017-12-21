@@ -133,10 +133,6 @@ class GitCommitBear(GlobalBear):
             body,
             **self.get_issue_checks_metadata().filter_parameters(kwargs))
 
-        if body and body[1] is '\n':
-            yield Result(self, 'More than one newline between'
-                               ' shortlog and body')
-
     def check_shortlog(self, shortlog,
                        shortlog_length: int=50,
                        shortlog_regex: str='',
@@ -249,6 +245,10 @@ class GitCommitBear(GlobalBear):
             yield Result(self, 'No newline found between shortlog and body at '
                                'HEAD commit. Please add one.')
             return
+
+        if body[1] is '\n':
+            yield Result(self, 'More than one newline found between '
+                               'shortlog and body')
 
         if body_regex and not re.fullmatch(body_regex, body.strip()):
             yield Result(self, 'No match found in commit message for the '

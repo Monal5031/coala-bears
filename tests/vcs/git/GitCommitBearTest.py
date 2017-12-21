@@ -290,9 +290,18 @@ class GitCommitBearTest(unittest.TestCase):
 
     def test_extra_newlines_between_shortlog_and_body(self):
         commit = 'Shortlog\n\n\nBody\n\nCloses #1010101'
+        commit1 = commit.rstrip('\n')
+        pos = commit1.find('\n')
+        shortlog = commit1[:pos] if pos != -1 else stdout
+        body = commit1[pos+1:] if pos != -1 else ''
+        te = []
+        for char in body:
+            te.append(char)
+        print(te)
         self.git_commit(commit)
         self.assertEqual(self.run_uut(),
-                         ['More than one newline between shortlog and body'])
+                         ['More than one newline found between '
+                          'shortlog and body'])
 
     def test_check_issue_reference(self):
         # Commit with no remotes configured
