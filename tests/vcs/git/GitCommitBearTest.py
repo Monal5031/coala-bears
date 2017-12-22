@@ -289,7 +289,7 @@ class GitCommitBearTest(unittest.TestCase):
         self.assert_no_msgs()
 
     def test_extra_newlines_between_shortlog_and_body(self):
-        commit = 'Shortlog\n\n\n\n\nBody\n\nCloses #1010101'
+        commit = 'Shortlog\n\n\nBody\n\nCloses #1010101'
         commit1 = commit.rstrip('\n')
         pos = commit1.find('\n')
         shortlog = commit1[:pos] if pos != -1 else stdout
