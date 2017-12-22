@@ -113,6 +113,11 @@ class GitCommitBear(GlobalBear):
             self.err('git:', repr(stderr))
             return
 
+        pos1 = stdout.find('\n')
+        shortlog1 = stdout[:pos1] if pos1 != -1 else stdout
+        body1 = stdout[pos1+1:] if pos1 != -1 else ''
+        print('run0:',[x for x in body1])
+
         stdout = stdout.rstrip('\n')
         pos = stdout.find('\n')
         shortlog = stdout[:pos] if pos != -1 else stdout
@@ -122,6 +127,9 @@ class GitCommitBear(GlobalBear):
             if not allow_empty_commit_message:
                 yield Result(self, 'HEAD commit has no message.')
             return
+
+        if body:
+             print('run:',[x for x in body])
 
         yield from self.check_shortlog(
             shortlog,
@@ -246,9 +254,12 @@ class GitCommitBear(GlobalBear):
                                'HEAD commit. Please add one.')
             return
 
+        print('body:',[x for x in body])
         if body[1] is '\n':
+            print('Y U do dis?? newline y??')
             yield Result(self, 'More than one newline found between '
                                'shortlog and body')
+            return
 
         if body_regex and not re.fullmatch(body_regex, body.strip()):
             yield Result(self, 'No match found in commit message for the '
